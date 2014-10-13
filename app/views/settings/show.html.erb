@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Api:</strong>
+  <%= @setting.api_id %>
+</p>
+
+<p>
+  <strong>Email notification:</strong>
+  <%= @setting.email_notification %>
+</p>
+
+<p>
+  <strong>Sms notification:</strong>
+  <%= @setting.sms_notification %>
+</p>
+
+<p>
+  <strong>Email ids:</strong>
+  <%= @setting.email_ids %>
+</p>
+
+<p>
+  <strong>Phone numbers:</strong>
+  <%= @setting.phone_numbers %>
+</p>
+
+<%= link_to 'Edit', edit_setting_path(@setting) %> |
+<%= link_to 'Back', settings_path %>

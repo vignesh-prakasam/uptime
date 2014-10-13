@@ -1,0 +1,36 @@
+<%= simple_form_for(@setting) do |f| %>
+  <% if @setting.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@setting.errors.count, "error") %> prohibited this setting from being saved:</h2>
+
+      <ul>
+      <% @setting.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.association :api %>
+  </div>
+  <div class="field">
+    <%= f.label :email_notification %><br>
+    <%= f.check_box :email_notification %>
+  </div>
+  <div class="field">
+    <%= f.label :sms_notification %><br>
+    <%= f.check_box :sms_notification %>
+  </div>
+  <div class="field">
+    <%= f.label :email_ids %><br>
+    <%= f.text_area :email_ids %>
+  </div>
+  <div class="field">
+    <%= f.label :phone_numbers %><br>
+    <%= f.text_area :phone_numbers %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

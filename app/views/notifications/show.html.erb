@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Api:</strong>
+  <%= @notification.api_id %>
+</p>
+
+<p>
+  <strong>Notification type:</strong>
+  <%= @notification.notification_type %>
+</p>
+
+<p>
+  <strong>Recipients:</strong>
+  <%= @notification.recipients %>
+</p>
+
+<%= link_to 'Edit', edit_notification_path(@notification) %> |
+<%= link_to 'Back', notifications_path %>

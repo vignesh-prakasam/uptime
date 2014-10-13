@@ -1,0 +1,49 @@
+<div class="row">
+  <div class="large-12 columns">
+    <div class="panel">
+      <h1 class="text-center">API status</h1>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="large-12 columns">
+    <table>
+      <thead>
+      <tr>
+        <th width="20%">Name</th>
+        <th width="20%">Url</th>
+        <th width="20%">Current Status</th>
+        <th width="20%">Last Checked</th>
+        <th width="20%"> Notifications  </th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <% @apis.each do |api| %>
+          <tr>
+            <td><%= api.name %></td>
+            <td><a href="<%= api.url %>"><%= api.url %></a></td>
+            <td>
+              <%if !api.logs.blank? and api.logs.last.status%>
+                  <span class="success label center">Up!</span>
+              <%else  %>
+                  <span class="alert label">Down!</span>
+              <% end  %>
+            </td>
+            <td><%= api.logs.last.created_at if !api.logs.blank?%></td>
+            <td>
+              <div class="switch radius">
+                <input id="exampleRadioSwitch2" type="checkbox" name="<%= api.setting%>[email_notification]" <% if api.setting.email_notification %> checked <%end  %>>
+                <label for="exampleRadioSwitch2"></label>
+              </div>
+            </td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
