@@ -14,8 +14,10 @@
 # end
 #
 
-every 10.minutes do
+every 5.minutes do
+  #runs all APIs and pushes the response to logs
   rake "scheduler"
 end
+
 
 # Learn more: http://github.com/javan/whenever

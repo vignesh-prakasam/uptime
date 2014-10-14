@@ -1,36 +1,49 @@
-<%= simple_form_for(@setting) do |f| %>
-  <% if @setting.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@setting.errors.count, "error") %> prohibited this setting from being saved:</h2>
+<% @api = Api.new if @api.blank?  %>
+<%= simple_form_for @api , :defaults => {:required => false} do |f| %>
+    <% if @api.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@api.errors.count, "error") %> prohibited this api from being saved:</h2>
 
-      <ul>
-      <% @setting.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+          <ul>
+            <% @api.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :name %><br>
+      <%= f.text_field :name %>
     </div>
-  <% end %>
+    <div class="field">
+      <%= f.label :url %><br>
+      <%= f.text_field :url %>
+    </div>
+    <div class="field">
+      <%= f.label :expected_response , "Expected Response(contains search will be done)"%> <br>
+      <%= f.text_area :expected_response %>
+    </div>
+    <%= f.fields_for :setting  do |setting_form| %>
+        <div class="field">
+          <%= setting_form.check_box :email_notification %>
+          <%= setting_form.label :email_notification %>
+        </div>
+        <div class="field">
+          <%= setting_form.label :email_ids , "Email ids to be notified(comma separated for multiple mail ids)"%><br>
+          <%= setting_form.text_field :email_ids %>
+        </div>
+        <div class="field">
+          <%= setting_form.check_box :sms_notification %>
+          <%= setting_form.label :sms_notification %>
 
-  <div class="field">
-    <%= f.association :api %>
-  </div>
-  <div class="field">
-    <%= f.label :email_notification %><br>
-    <%= f.check_box :email_notification %>
-  </div>
-  <div class="field">
-    <%= f.label :sms_notification %><br>
-    <%= f.check_box :sms_notification %>
-  </div>
-  <div class="field">
-    <%= f.label :email_ids %><br>
-    <%= f.text_area :email_ids %>
-  </div>
-  <div class="field">
-    <%= f.label :phone_numbers %><br>
-    <%= f.text_area :phone_numbers %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+        </div>
+        <div class="field">
+          <%= setting_form.label :phone_numbers , "Phone numbers to be notified via text(comma separated for multiple numbers)"%><br>
+          <%= setting_form.text_field :phone_numbers %>
+        </div>
+    <% end  %>
+    <div class="actions">
+      <%= f.submit :class=> "button radius success"%>
+    </div>
 <% end %>

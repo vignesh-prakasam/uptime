@@ -5,6 +5,11 @@
     </div>
   </div>
 </div>
+<div class="row">
+  <div class="large-12 columns left">
+      <h5 class="text-center">Frequency of check: Every 5 minutes</h5>
+  </div>
+</div>
 
 <div class="row">
   <div class="large-12 columns">
@@ -13,9 +18,11 @@
       <tr>
         <th width="20%">Name</th>
         <th width="20%">Url</th>
-        <th width="20%">Current Status</th>
-        <th width="20%">Last Checked</th>
-        <th width="20%"> Notifications  </th>
+        <th width="10%">Current Status</th>
+        <th width="10%">Last Checked</th>
+        <th width="20%">Last Downtime</th>
+        <th width="15%">Notifications</th>
+        <th width="5%"> Delete</th>
       </tr>
       </thead>
 
@@ -23,7 +30,7 @@
       <% @apis.each do |api| %>
           <tr>
             <td><%= api.name %></td>
-            <td><a href="<%= api.url %>"><%= api.url %></a></td>
+            <td><a target="blank" href="<%= api.url %>" title="<%= api.url %>" ><%= api.url[0..30] + (".." if api.url.size > 20) %></a></td>
             <td>
               <%if !api.logs.blank? and api.logs.last.status%>
                   <span class="success label center">Up!</span>
@@ -31,19 +38,55 @@
                   <span class="alert label">Down!</span>
               <% end  %>
             </td>
-            <td><%= api.logs.last.created_at if !api.logs.blank?%></td>
+            <td><%= "#{api.logs.last.time_lapsed} (mm:ss) back"  if !api.logs.blank?%></td>
+            <td><%= "#{api.logs.where(:status => false).last.created_at}"  if !api.logs.blank? and !api.logs.where(:status => false).blank?%></td>
             <td>
               <div class="switch radius">
-                <input id="exampleRadioSwitch2" type="checkbox" name="<%= api.setting%>[email_notification]" <% if api.setting.email_notification %> checked <%end  %>>
-                <label for="exampleRadioSwitch2"></label>
+                <input id="<%= api.setting.id %>_notification" onchange="change_notification('<%= api.setting.id  %>','<%= api.setting.id%>_notification')" type="checkbox" name="<%= api.setting.id%>[email_notification]" <% if api.setting.email_notification %> checked <%end  %>>
+                <label for="<%= api.setting.id %>_notification" ></label>
+              </div>
+            </td>
+            <td>
+              <div class="radius">
+                <%= link_to 'Edit', edit_setting_path(api.setting) , :class => "button radius success tiny"%>
+             <%= link_to 'Delete', api, method: :delete, :class => "button radius alert tiny" ,data: { confirm: 'Are you sure?' } %>
               </div>
             </td>
           </tr>
+
       <% end %>
       </tbody>
     </table>
   </div>
 </div>
+
+<div class="row">
+  <div class="large-12 columns">
+    <a href="#" data-reveal-id="myModal" class="button success radius">Add an API</a>
+
+    <div id="myModal" class="reveal-modal" data-reveal>
+
+      <%= render "apis/form"  %>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function change_notification(setting_id, id)
+  {
+
+      $.ajax({
+          type: "POST",
+          url: "<%= update_email_notification_settings_path %>",
+          data: { 'setting_id': setting_id, 'email_notification': $('#'+id).is(":checked")},
+          success: function (data) {
+              //$('#right-sidebar').load("<%#= shopping_cart_orders_path %>" + "?order_id=" + <%#= @order.id %>);
+          }
+      });
+  }
+</script>
 
 
 

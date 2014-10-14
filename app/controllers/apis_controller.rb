@@ -15,6 +15,7 @@ class ApisController < ApplicationController
   # GET /apis/new
   def new
     @api = Api.new
+    @setting= @api.setting.build
   end
 
   # GET /apis/1/edit
@@ -25,10 +26,12 @@ class ApisController < ApplicationController
   # POST /apis.json
   def create
     @api = Api.new(api_params)
-    @api.email_ids = @api.email_ids.split(',')
+
     respond_to do |format|
       if @api.save
-        format.html { redirect_to @api, notice: 'Api was successfully created.' }
+        a = @api.execute_call
+        Log.create(:api_id => @api.id , :response => a.to_s , :status => @api.check_status)
+        format.html { redirect_to apis_path, notice: 'Api was successfully created.' }
         format.json { render :show, status: :created, location: @api }
       else
         format.html { render :new }
@@ -41,10 +44,10 @@ class ApisController < ApplicationController
   # PATCH/PUT /apis/1.json
   def update
     respond_to do |format|
-      @api.email_ids = @api.email_ids.split(',')
-      p @api.email_ids
       if @api.update(api_params)
-        format.html { redirect_to @api, notice: 'Api was successfully updated.' }
+        a = @api.execute_call
+        Log.create(:api_id => @api.id , :response => a.to_s , :status => @api.check_status)
+        format.html { redirect_to apis_path, notice: 'Api was successfully updated.' }
         format.json { render :show, status: :ok, location: @api }
       else
         format.html { render :edit }
@@ -71,6 +74,6 @@ class ApisController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def api_params
-      params.require(:api).permit(:name, :url, :expected_response, :method_type ,:setting)
+      params.require(:api).permit(:name, :url, :expected_response, :method_type ,:setting ,setting_attributes: [:id, :email_notification , :sms_notification , :email_ids , :phone_numbers])
     end
 end

@@ -61,4 +61,11 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+  resources :settings do
+    collection do
+      post :update_email_notification
+    end
+  end
+
 end

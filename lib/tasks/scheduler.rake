@@ -11,7 +11,7 @@ task :scheduler => :environment do
       p "#{api.name.upcase} ====> DOWN"
       recipients = api.setting.email_ids
       begin
-        UserMailer.send_notification(recipients ,  "#{api.name} is down in PROD" ,   "#{api.name} is down in PROD. Error response #{api.logs.last.response}").deliver
+        UserMailer.send_notification(recipients ,  "#{api.name} is down" ,   "#{api.name} is down . Error response #{api.logs.last.response}").deliver
         Notification.create(:api_id => api.id , :notification_type => "email" , :recipients => recipients)
       rescue => e
         p e.inspect

@@ -1,29 +1,43 @@
-<h1>Listing notifications</h1>
+<div class="row">
+  <div class="large-12 columns">
+    <div class="panel">
+      <h1 class="text-center">API Logs</h1>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="large-12 columns left">
+    <h5 class="text-center">Alert notifications that were sent out</h5>
+  </div>
+</div>
+<div class="row">
+  <div class="large-12 columns">
 
-<table>
-  <thead>
-    <tr>
-      <th>Api</th>
-      <th>Notification type</th>
-      <th>Recipients</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @notifications.each do |notification| %>
+    <table>
+      <thead>
       <tr>
-        <td><%= notification.api_id %></td>
-        <td><%= notification.notification_type %></td>
-        <td><%= notification.recipients %></td>
-        <td><%= link_to 'Show', notification %></td>
-        <td><%= link_to 'Edit', edit_notification_path(notification) %></td>
-        <td><%= link_to 'Destroy', notification, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <th>Api</th>
+        <th>Notification type</th>
+        <th>Recipients</th>
+        <th>Time</th>
+        <th colspan="3"></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+      </thead>
 
-<br>
+      <tbody>
+      <% @notifications.each do |notification| %>
+          <tr>
+            <td><%= notification.api.name %></td>
+            <td><%= notification.notification_type %></td>
+            <td><%= notification.recipients %></td>
+            <td><%= notification.created_at %></td>
+            <td><%= link_to 'Destroy', notification, method: :delete, :class => "button radius tiny alert", data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
 
+    <br>
+  </div>
+</div>
 

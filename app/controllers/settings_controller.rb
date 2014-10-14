@@ -19,6 +19,8 @@ class SettingsController < ApplicationController
 
   # GET /settings/1/edit
   def edit
+    @setting.email_ids = @setting.email_ids.join(',')
+    @api = @setting.api
   end
 
   # POST /settings
@@ -28,7 +30,7 @@ class SettingsController < ApplicationController
     @setting.email_ids = @setting.email_ids.split(',')
     respond_to do |format|
       if @setting.save
-        format.html { redirect_to @setting, notice: 'Setting was successfully created.' }
+        format.html { redirect_to settings_path, notice: 'Setting was successfully created.' }
         format.json { render :show, status: :created, location: @setting }
       else
         format.html { render :new }
@@ -41,13 +43,12 @@ class SettingsController < ApplicationController
   # PATCH/PUT /settings/1.json
   def update
     respond_to do |format|
-      p "EMAILll"
-      p  @setting.email_ids.split(',')
 
-      @setting.email_ids = @setting.email_ids.split(',')
-      @setting.save
-      if @setting.update(setting_params.except(:email_ids))
-        format.html { redirect_to @setting, notice: 'Setting was successfully updated.' }
+      if @setting.update(setting_params)
+        @api = @setting.api
+        a = @api.execute_call
+        Log.create(:api_id => @api.id , :response => a.to_s , :status => @api.check_status)
+        format.html { redirect_to settings_path, notice: 'Setting was successfully updated.' }
         format.json { render :show, status: :ok, location: @setting }
       else
         format.html { render :edit }
@@ -66,6 +67,11 @@ class SettingsController < ApplicationController
     end
   end
 
+  def update_email_notification
+    Setting.find_by_id(params[:setting_id]).update(:email_notification => params[:email_notification])
+    redirect_to root_path
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_setting
@@ -74,6 +80,6 @@ class SettingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def setting_params
-      params.require(:setting).permit(:api_id, :email_notification, :sms_notification, :email_ids, :phone_numbers)
+      params.require(:setting).permit(:api_id, :email_notification, :sms_notification, :email_ids, :phone_numbers ,:id , :setting_id)
     end
 end
